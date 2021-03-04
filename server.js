@@ -5,7 +5,12 @@ const app = express();
 
 connectDB();
 
-app.get('/', (req, res) => res.send('API running'));
+app.use(express.json());
+
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/ascents', require('./routes/api/ascents'));
+app.use('/api/areas', require('./routes/api/areas'));
 
 const PORT = process.env.PORT || 5000;
 
