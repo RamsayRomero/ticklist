@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Transition } from '@headlessui/react';
-import PropTypes from 'prop-types';
 
-const Navbar = (props) => {
+const Navbar = () => {
   const [profileDropdownIsOpen, setProfileDropdownIsOpen] = useState(false);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
 
@@ -32,9 +31,9 @@ const Navbar = (props) => {
                   aria-hidden='true'
                 >
                   <path
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     d='M4 6h16M4 12h16M4 18h16'
                   />
                 </svg>
@@ -48,9 +47,9 @@ const Navbar = (props) => {
                   aria-hidden='true'
                 >
                   <path
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     d='M6 18L18 6M6 6l12 12'
                   />
                 </svg>
@@ -109,9 +108,9 @@ const Navbar = (props) => {
                   aria-hidden='true'
                 >
                   <path
-                    fill-rule='evenodd'
+                    fillRule='evenodd'
                     d='M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z'
-                    clip-rule='evenodd'
+                    clipRule='evenodd'
                   />
                 </svg>
                 <span>Log Ascent</span>
@@ -129,9 +128,9 @@ const Navbar = (props) => {
                   aria-hidden='true'
                 >
                   <path
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                     d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'
                   />
                 </svg>
@@ -170,27 +169,27 @@ const Navbar = (props) => {
                   aria-orientation='vertical'
                   aria-labelledby='user-menu'
                 >
-                  <a
-                    href='#'
+                  <Link
+                    to='/profile'
                     className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
                     role='menuitem'
                   >
                     Your Profile
-                  </a>
-                  <a
-                    href='#'
+                  </Link>
+                  <Link
+                    to='/settings'
                     className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
                     role='menuitem'
                   >
                     Settings
-                  </a>
-                  <a
-                    href='#'
+                  </Link>
+                  <Link
+                    to='/signout'
                     className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
                     role='menuitem'
                   >
                     Sign out
-                  </a>
+                  </Link>
                 </Transition>
               </div>
             </div>
@@ -255,40 +254,38 @@ const Navbar = (props) => {
                 aria-hidden='true'
               >
                 <path
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
-                  stroke-width='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
                   d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'
                 />
               </svg>
             </button>
           </div>
           <div className='mt-3 px-2 space-y-1 sm:px-3'>
-            <a
-              href='#'
+            <Link
+              to='/profile'
               className='block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700'
             >
               Your Profile
-            </a>
-            <a
-              href='#'
+            </Link>
+            <Link
+              to='/settings'
               className='block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700'
             >
               Settings
-            </a>
-            <a
-              href='#'
+            </Link>
+            <Link
+              to='/signout'
               className='block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700'
             >
               Sign out
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </nav>
   );
 };
-
-Navbar.propTypes = {};
 
 export default Navbar;
