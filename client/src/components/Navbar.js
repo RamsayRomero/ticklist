@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Transition } from '@headlessui/react';
+import { logout } from '../redux/actions/auth';
 
-const Navbar = () => {
+const Navbar = ({ isAuthenticated, logout }) => {
   const [profileDropdownIsOpen, setProfileDropdownIsOpen] = useState(false);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <nav className='bg-gray-800'>
@@ -197,13 +198,13 @@ const Navbar = () => {
                     >
                       Settings
                     </Link>
-                    <Link
-                      to='/signout'
+                    <button
+                      onClick={logout}
                       className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
                       role='menuitem'
                     >
                       Sign out
-                    </Link>
+                    </button>
                   </Transition>
                 </div>
               </div>
@@ -303,12 +304,12 @@ const Navbar = () => {
               >
                 Settings
               </Link>
-              <Link
-                to='/signout'
+              <button
+                onClick={logout}
                 className='block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700'
               >
                 Sign out
-              </Link>
+              </button>
             </div>
           </div>
         )}
@@ -317,4 +318,8 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { logout })(Navbar);

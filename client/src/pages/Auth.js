@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { register, login } from '../redux/actions/auth';
 
-const Auth = () => {
+const Auth = (props) => {
   const [isLogInMode, setIsLogInMode] = useState(true);
   const [formData, setFormData] = useState({
     firstname: '',
@@ -14,38 +15,23 @@ const Auth = () => {
   const onInputChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const formSubmitHandler = async (e) => {
+  const formSubmitHandler = (e) => {
     e.preventDefault();
-    try {
-      if (isLogInMode) {
-        const { data } = await axios.post('/api/auth/login', {
-          email: formData.email,
-          password: formData.password,
-        });
-        console.log(data);
-      } else {
-        const { data } = await axios.post('/api/users/register', formData);
-        console.log(data);
-      }
-    } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
+    if (isLogInMode) {
+      props.login(formData.email, formData.password);
+    } else {
+      props.register(formData);
     }
   };
 
+  if (props.isAuthenticated) {
+    return <Redirect to='/' />;
+  }
+
   return (
     <div className='min-h-screen bg-white flex'>
+      {props.loading && <div>Loading...</div>}
+      {props.errors && props.errors.map((err) => <div>{err.msg}</div>)}
       <div className='flex-1 flex flex-col justify-center py-6 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24'>
         <div className='mx-auto w-full max-w-sm lg:w-96'>
           <div>
@@ -183,4 +169,10 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
+  errors: state.auth.errors,
+});
+
+export default connect(mapStateToProps, { register, login })(Auth);
