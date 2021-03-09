@@ -8,6 +8,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   ACCOUNT_DELETED,
+  CLEAR_ERRORS,
 } from '../actions/types';
 
 const initialState = {
@@ -27,6 +28,8 @@ function authReducer(state = initialState, action) {
         ...state,
         loading: true,
       };
+    case CLEAR_ERRORS:
+      return { ...state, errors: null };
     case USER_LOADED:
       return {
         ...state,

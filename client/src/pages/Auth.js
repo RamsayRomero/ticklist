@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { register, login } from '../redux/actions/auth';
+import { register, login, clearErrors } from '../redux/actions/auth';
+import HashLoader from 'react-spinners/HashLoader';
+import ErrorModal from '../components/ErrorModal';
 
 const Auth = (props) => {
   const [isLogInMode, setIsLogInMode] = useState(true);
@@ -30,8 +32,11 @@ const Auth = (props) => {
 
   return (
     <div className='min-h-screen bg-white flex'>
-      {props.loading && <div>Loading...</div>}
-      {props.errors && props.errors.map((err) => <div>{err.msg}</div>)}
+      <ErrorModal
+        isOpen={!!props.errors}
+        onClose={props.clearErrors}
+        errorMessage={props.errors && props.errors[0].msg}
+      />
       <div className='flex-1 flex flex-col justify-center py-6 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24'>
         <div className='mx-auto w-full max-w-sm lg:w-96'>
           <div>
@@ -150,7 +155,15 @@ const Auth = (props) => {
                     type='submit'
                     className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                   >
-                    Sign in
+                    {props.loading ? (
+                      <HashLoader
+                        loading={props.loading}
+                        color='white'
+                        size={20}
+                      />
+                    ) : (
+                      'Sign in'
+                    )}
                   </button>
                 </div>
               </form>
@@ -175,4 +188,4 @@ const mapStateToProps = (state) => ({
   errors: state.auth.errors,
 });
 
-export default connect(mapStateToProps, { register, login })(Auth);
+export default connect(mapStateToProps, { register, login, clearErrors })(Auth);

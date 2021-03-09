@@ -8,6 +8,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   AUTH_START,
+  CLEAR_ERRORS,
 } from './types';
 
 export const loadUser = () => async (dispatch) => {
@@ -66,6 +67,8 @@ export const register = (formData) => async (dispatch) => {
 };
 
 export const login = (email, password) => async (dispatch) => {
+  dispatch({ type: AUTH_START });
+
   const body = { email, password };
 
   try {
@@ -98,3 +101,5 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 export const logout = () => ({ type: LOGOUT });
+
+export const clearErrors = () => ({ type: CLEAR_ERRORS });
