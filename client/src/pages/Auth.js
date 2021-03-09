@@ -37,8 +37,8 @@ const Auth = (props) => {
     }
   };
 
-  if (props.isAuthenticated) {
-    return <Redirect to='/' />;
+  if (props.user) {
+    return <Redirect to='/dashboard' />;
   }
 
   return (

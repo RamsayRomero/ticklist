@@ -8,7 +8,20 @@ const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
 
-// @route    POST api/users
+// @route    GET api/users/
+// @desc     Get all users
+// @access   Public
+router.get('/', async (req, res) => {
+  try {
+    let users = await User.find({}, '-password');
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route    POST api/users/register
 // @desc     Register user
 // @access   Public
 router.post(
