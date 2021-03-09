@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { register, login, clearErrors } from '../redux/actions/auth';
+import { register, login } from '../redux/actions/auth';
 import HashLoader from 'react-spinners/HashLoader';
 import ErrorModal from '../components/ErrorModal';
+import logo from '../img/logo-black.png';
 
 const Auth = (props) => {
   const [isLogInMode, setIsLogInMode] = useState(true);
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (props.errors) {
+      setErrorModalIsOpen(true);
+    } else {
+      setErrorModalIsOpen(false);
+    }
+  }, [props.errors]);
+
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -33,19 +44,15 @@ const Auth = (props) => {
   return (
     <div className='min-h-screen bg-white flex'>
       <ErrorModal
-        isOpen={!!props.errors}
-        onClose={props.clearErrors}
+        isOpen={errorModalIsOpen}
+        onClose={() => setErrorModalIsOpen(false)}
         errorMessage={props.errors && props.errors[0].msg}
       />
       <div className='flex-1 flex flex-col justify-center py-6 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24'>
         <div className='mx-auto w-full max-w-sm lg:w-96'>
           <div>
             <Link className='inline-block' to='/'>
-              <img
-                className='h-12 w-auto'
-                src='https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
-                alt='Workflow'
-              />
+              <img className='h-20 w-auto' src={logo} alt='Ticklist logo' />
             </Link>
             <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
               {isLogInMode
@@ -188,4 +195,4 @@ const mapStateToProps = (state) => ({
   errors: state.auth.errors,
 });
 
-export default connect(mapStateToProps, { register, login, clearErrors })(Auth);
+export default connect(mapStateToProps, { register, login })(Auth);

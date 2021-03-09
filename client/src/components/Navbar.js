@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Transition } from '@headlessui/react';
 import { logout } from '../redux/actions/auth';
+import logo from '../img/logo-white.png';
 
-const Navbar = ({ isAuthenticated, logout }) => {
+const Navbar = ({ isAuthenticated, logout, user }) => {
   const [profileDropdownIsOpen, setProfileDropdownIsOpen] = useState(false);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
 
@@ -57,18 +59,12 @@ const Navbar = ({ isAuthenticated, logout }) => {
                 </svg>
               </button>
             </div>
-            <div className='flex-shrink-0 flex items-center'>
-              <img
-                className='block lg:hidden h-8 w-auto'
-                src='https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg'
-                alt='Workflow'
-              />
-              <img
-                className='hidden lg:block h-8 w-auto'
-                src='https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg'
-                alt='Workflow'
-              />
-            </div>
+            <Link to='/' className='flex-shrink-0 flex items-center'>
+              <img className='h-16 w-auto' src={logo} alt='Ticklist logo' />
+              <div className='hidden lg:block -ml-2 text-white text-xl tracking-widest'>
+                Ticklist
+              </div>
+            </Link>
             <div className='hidden md:ml-6 md:flex md:items-center md:space-x-4'>
               {isAuthenticated && (
                 <NavLink
@@ -267,9 +263,9 @@ const Navbar = ({ isAuthenticated, logout }) => {
                 />
               </div>
               <div className='ml-3'>
-                <div className='text-base font-medium text-white'>Tom Cook</div>
+                <div className='text-base font-medium text-white'>{`${user.firstname} ${user.lastname}`}</div>
                 <div className='text-sm font-medium text-gray-400'>
-                  tom@example.com
+                  {user.email}
                 </div>
               </div>
               <button className='ml-auto flex-shrink-0 bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white'>
@@ -318,8 +314,15 @@ const Navbar = ({ isAuthenticated, logout }) => {
   );
 };
 
+Navbar.propTypes = {
+  logout: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { logout })(Navbar);
