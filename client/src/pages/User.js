@@ -66,13 +66,13 @@ const User = ({ user, ascents, getAscentsByUser, loading, errors, match }) => {
                         </th>
                         <th
                           scope='col'
-                          className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                          className='hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                         >
                           Rating
                         </th>
                         <th
                           scope='col'
-                          className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                          className='hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                         >
                           Date
                         </th>
@@ -84,22 +84,22 @@ const User = ({ user, ascents, getAscentsByUser, loading, errors, match }) => {
                     <tbody className='bg-white divide-y divide-gray-200'>
                       {ascents.map((ascent) => (
                         <tr key={ascent._id}>
-                          <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                          <td className='px-6 py-4 text-sm font-medium text-gray-900'>
                             {ascent.name}
                           </td>
-                          <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                          <td className='px-6 py-4 text-sm text-gray-500'>
                             {ascent.area.title}
                           </td>
-                          <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                          <td className='px-6 py-4 text-sm text-gray-500'>
                             {ascent.grade}
                           </td>
-                          <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                          <td className='hidden md:table-cell px-6 py-4 text-sm text-gray-500'>
                             {ascent.rating}
                           </td>
-                          <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+                          <td className='hidden sm:table-cell px-6 py-4 text-sm text-gray-500'>
                             {formatDate(ascent.date)}
                           </td>
-                          <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                          <td className='px-6 py-4 text-right text-sm font-medium'>
                             <a
                               href='#'
                               className='text-indigo-600 hover:text-indigo-900'
