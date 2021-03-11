@@ -15,6 +15,7 @@ router.post(
   check('name', 'Name is required').notEmpty(),
   check('grade', 'Grade is required').notEmpty(),
   check('date', 'Date is required').notEmpty(),
+  check('rating', 'Rating is required').notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -26,6 +27,7 @@ router.post(
       const newAscent = await new Ascent({
         user: req.user.id,
         area: req.params.area_id,
+        rating: req.body.rating,
         name: req.body.name,
         grade: req.body.grade,
         date: req.body.date,
@@ -60,12 +62,15 @@ router.get('/:area_id', async (req, res) => {
 });
 
 // @route    GET api/ascents/user/:user_id
-// @desc     Get problems by user id
+// @desc     Get ascents by user id
 // @access   Public
 router.get('/user/:user_id', async (req, res) => {
   try {
-    const problems = await Ascent.find({ user: req.params.user_id });
-    res.json(problems);
+    const ascents = await Ascent.find({ user: req.params.user_id }).populate(
+      'area'
+    );
+    const user = await User.findById(req.params.user_id).select('-password');
+    res.json({ user, ascents });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

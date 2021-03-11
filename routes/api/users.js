@@ -14,7 +14,7 @@ const User = require('../../models/User');
 router.get('/', async (req, res) => {
   try {
     let users = await User.find({}, '-password');
-    res.json(users);
+    res.json({ users: users });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

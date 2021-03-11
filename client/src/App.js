@@ -4,6 +4,7 @@ import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
 import Users from './pages/Users';
+import User from './pages/User';
 import AllAreas from './pages/AllAreas';
 import MyAreas from './pages/MyAreas';
 import Profile from './pages/Profile';
@@ -35,6 +36,7 @@ const App = ({ user }) => {
       <Switch>
         <Route path='/dashboard' exact component={Dashboard} />
         <Route path='/users' exact component={Users} />
+        <Route path='/users/:user_id' exact component={User} />
         <Route path='/areas' exact component={AllAreas} />
         <Route path='/myareas' exact component={MyAreas} />
         <Route path='/profile' exact component={Profile} />
@@ -48,6 +50,7 @@ const App = ({ user }) => {
         <Route path='/' exact component={Landing} />
         <Route path='/auth' exact component={Auth} />
         <Route path='/users' exact component={Users} />
+        <Route path='/users/:user_id' exact component={User} />
         <Route path='/areas' exact component={AllAreas} />
         <Redirect to='/auth' />
       </Switch>

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Transition } from '@headlessui/react';
 import { logout } from '../redux/actions/auth';
 import logo from '../img/logo-white.png';
+import Avatar from './Avatar';
 
 const Navbar = ({ isAuthenticated, logout, user }) => {
   const [profileDropdownIsOpen, setProfileDropdownIsOpen] = useState(false);
@@ -256,19 +257,7 @@ const Navbar = ({ isAuthenticated, logout, user }) => {
           <div className='pt-4 pb-3 border-t border-gray-700'>
             <div className='flex items-center px-5 sm:px-6'>
               <div className='flex-shrink-0'>
-                {user.avatar ? (
-                  <img
-                    className='h-10 w-10 rounded-full'
-                    src={user.avatar}
-                    alt=''
-                  />
-                ) : (
-                  <span className='inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-500'>
-                    <span className='font-medium leading-none text-white'>
-                      {user.firstname.charAt(0) + user.lastname.charAt(0)}
-                    </span>
-                  </span>
-                )}
+                <Avatar user={user} />
               </div>
               <div className='ml-3'>
                 <div className='text-base font-medium text-white'>{`${user.firstname} ${user.lastname}`}</div>
@@ -324,7 +313,7 @@ const Navbar = ({ isAuthenticated, logout, user }) => {
 
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.object.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
 };
 

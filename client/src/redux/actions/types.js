@@ -7,3 +7,7 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
 export const AUTH_START = 'AUTH_START';
+export const GET_USERS = 'GET_USERS';
+export const USERS_ERROR = 'USERS_ERROR';
+export const GET_ASCENTS_BY_USER = 'GET_ASCENTS_BY_USER';
+export const ASCENTS_ERROR = 'ASCENTS_ERROR';
