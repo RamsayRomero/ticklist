@@ -4,8 +4,11 @@ import { connect } from 'react-redux';
 import { getAscentsByUser } from '../redux/actions/ascents';
 import Avatar from '../components/Avatar';
 import formatDate from '../utils/formatDate';
+import HashLoader from 'react-spinners/HashLoader';
+import LogAscent from '../components/LogAscent';
 
-export const Dashboard = ({ user, getAscentsByUser, ascents }) => {
+export const Dashboard = ({ user, getAscentsByUser, ascents, loading }) => {
+  const [logAscentIsOpen, setLogAscentIsOpen] = useState(true);
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [accountDropdownIsOpen, setAccountDropdownIsOpen] = useState(false);
   const [profileDropdownIsOpen, setProfileDropdownIsOpen] = useState(false);
@@ -23,6 +26,10 @@ export const Dashboard = ({ user, getAscentsByUser, ascents }) => {
 
   return (
     <div class='h-screen flex overflow-hidden bg-white'>
+      <LogAscent
+        isOpen={logAscentIsOpen}
+        onClose={() => setLogAscentIsOpen(false)}
+      />
       {/* <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. --> */}
       {mobileMenuIsOpen && (
         <div class='lg:hidden'>
@@ -543,11 +550,7 @@ export const Dashboard = ({ user, getAscentsByUser, ascents }) => {
                     aria-haspopup='true'
                   >
                     <span class='sr-only'>Open user menu</span>
-                    <img
-                      class='h-8 w-8 rounded-full'
-                      src='https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixqx=NUbxqHJFDM&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                      alt=''
-                    />
+                    <Avatar user={user} />
                   </button>
                 </div>
 
@@ -641,6 +644,7 @@ export const Dashboard = ({ user, getAscentsByUser, ascents }) => {
                 Share
               </button>
               <button
+                onClick={() => setLogAscentIsOpen(true)}
                 type='button'
                 class='order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3'
               >
@@ -741,78 +745,84 @@ export const Dashboard = ({ user, getAscentsByUser, ascents }) => {
           </div>
 
           {/* Projects table */}
-          <div class='mt-8'>
-            <div class='align-middle inline-block min-w-full border-b border-gray-200'>
-              <table className='min-w-full divide-y divide-gray-200'>
-                <thead className='bg-gray-50'>
-                  <tr>
-                    <th
-                      scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                    >
-                      Area
-                    </th>
-                    <th
-                      scope='col'
-                      className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                    >
-                      Grade
-                    </th>
-                    <th
-                      scope='col'
-                      className='hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                    >
-                      Rating
-                    </th>
-                    <th
-                      scope='col'
-                      className='hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                    >
-                      Date
-                    </th>
-                    <th scope='col' className='relative px-6 py-3'>
-                      <span className='sr-only'>Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className='bg-white divide-y divide-gray-200'>
-                  {ascents.map((ascent) => (
-                    <tr key={ascent._id}>
-                      <td className='px-6 py-4 text-sm font-medium text-gray-900'>
-                        {ascent.name}
-                      </td>
-                      <td className='px-6 py-4 text-sm text-gray-500'>
-                        {ascent.area.title}
-                      </td>
-                      <td className='px-6 py-4 text-sm text-gray-500'>
-                        {ascent.grade}
-                      </td>
-                      <td className='hidden md:table-cell px-6 py-4 text-sm text-gray-500'>
-                        {ascent.rating}
-                      </td>
-                      <td className='hidden sm:table-cell px-6 py-4 text-sm text-gray-500'>
-                        {formatDate(ascent.date)}
-                      </td>
-                      <td className='px-6 py-4 text-right text-sm font-medium'>
-                        <a
-                          href='#'
-                          className='text-indigo-600 hover:text-indigo-900'
-                        >
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {loading ? (
+            <div className='flex justify-center mt-24'>
+              <HashLoader loading={loading} />
             </div>
-          </div>
+          ) : (
+            <div class='mt-8'>
+              <div class='align-middle inline-block min-w-full border-b border-gray-200'>
+                <table className='min-w-full divide-y divide-gray-200'>
+                  <thead className='bg-gray-50'>
+                    <tr>
+                      <th
+                        scope='col'
+                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                      >
+                        Name
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                      >
+                        Area
+                      </th>
+                      <th
+                        scope='col'
+                        className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                      >
+                        Grade
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                      >
+                        Rating
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                      >
+                        Date
+                      </th>
+                      <th scope='col' className='relative px-6 py-3'>
+                        <span className='sr-only'>Edit</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className='bg-white divide-y divide-gray-200'>
+                    {ascents.map((ascent) => (
+                      <tr key={ascent._id}>
+                        <td className='px-6 py-4 text-sm font-medium text-gray-900'>
+                          {ascent.name}
+                        </td>
+                        <td className='px-6 py-4 text-sm text-gray-500'>
+                          {ascent.area.title}
+                        </td>
+                        <td className='px-6 py-4 text-sm text-gray-500'>
+                          {ascent.grade}
+                        </td>
+                        <td className='hidden md:table-cell px-6 py-4 text-sm text-gray-500'>
+                          {ascent.rating}
+                        </td>
+                        <td className='hidden sm:table-cell px-6 py-4 text-sm text-gray-500'>
+                          {formatDate(ascent.date)}
+                        </td>
+                        <td className='px-6 py-4 text-right text-sm font-medium'>
+                          <a
+                            href='#'
+                            className='text-indigo-600 hover:text-indigo-900'
+                          >
+                            Edit
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
@@ -823,11 +833,13 @@ Dashboard.propTypes = {
   getAscentsByUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   ascents: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   ascents: state.ascents.ascents,
+  loading: state.ascents.loading,
 });
 
 export default connect(mapStateToProps, { getAscentsByUser })(Dashboard);

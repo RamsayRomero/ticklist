@@ -11,3 +11,4 @@ export const GET_USERS = 'GET_USERS';
 export const USERS_ERROR = 'USERS_ERROR';
 export const GET_ASCENTS_BY_USER = 'GET_ASCENTS_BY_USER';
 export const ASCENTS_ERROR = 'ASCENTS_ERROR';
+export const LOG_ASCENT = 'LOG_ASCENT';

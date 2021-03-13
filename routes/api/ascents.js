@@ -37,10 +37,10 @@ router.post(
       });
 
       const ascent = await newAscent.save();
-      user.ascents.push(ascent);
+      user.ascents.unshift(ascent);
       await user.save();
-
-      res.json(ascent);
+      const ascents = await Ascent.find({ user: req.user.id }).populate('area');
+      res.json(ascents);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');

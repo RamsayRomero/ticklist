@@ -6,7 +6,7 @@ const initialState = {
   loading: true,
 };
 
-export default (state = initialState, { type, payload }) => {
+function usersReducer(state = initialState, { type, payload }) {
   switch (type) {
     case GET_USERS:
       return { ...state, ...payload, errors: null, loading: false };
@@ -15,4 +15,6 @@ export default (state = initialState, { type, payload }) => {
     default:
       return state;
   }
-};
+}
+
+export default usersReducer;
