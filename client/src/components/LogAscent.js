@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 import { connect } from 'react-redux';
-import { logAscent } from '../redux/actions/ascents';
+import { logAscent, updateAscent } from '../redux/actions/ascents';
 import { getAreas } from '../redux/actions/areas';
 import Rating from '@material-ui/lab/Rating';
 import TextField from '@material-ui/core/TextField';
@@ -16,31 +16,34 @@ const LogAscent = ({
   areas,
   loading,
   user,
+  formData,
+  setFormData,
+  editMode,
+  updateAscent,
 }) => {
   useEffect(() => {
     getAreas();
   }, [getAreas]);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    rating: 0,
-    area: '',
-    grade: 'VB',
-    date: '',
-    flash: false,
-    fa: false,
-    beta: { youtube: '', instagram: '' },
-  });
+  // const [formData, setFormData] = useState({
+  //   name: '',
+  //   rating: 0,
+  //   area: '',
+  //   grade: 'VB',
+  //   date: '',
+  //   flash: false,
+  //   fa: false,
+  //   youtube: '',
+  //   instagram: '',
+  // });
 
   const onChange = (e) => {
-    console.log(e.target);
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const onSubmit = (e) => {
-    console.log(formData);
     e.preventDefault();
-    logAscent(formData, user._id);
+    editMode ? updateAscent(formData, user._id) : logAscent(formData, user._id);
   };
 
   return (
@@ -107,14 +110,11 @@ const LogAscent = ({
               </svg>
             </button>
           </div>
-          <h3>Log Ascent</h3>
+          <h3>{editMode ? 'Edit Ascent' : 'Log Ascent'}</h3>
           {!areas ? (
             <HashLoader loading={loading} />
           ) : (
-            <form
-              onSubmit={onSubmit}
-              className='space-y-8 divide-y divide-gray-200'
-            >
+            <form onSubmit={onSubmit} className='space-y-8'>
               <div className='mt-6 grid gap-y-6 gap-x-4 grid-cols-6'>
                 <div className='col-span-6'>
                   <label
@@ -283,13 +283,8 @@ const LogAscent = ({
                       youtube.com/
                     </span>
                     <input
-                      value={formData.beta.youtube}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          beta: { ...formData.beta, youtube: e.target.value },
-                        })
-                      }
+                      value={formData.youtube}
+                      onChange={onChange}
                       type='text'
                       name='youtube'
                       id='youtube'
@@ -302,13 +297,8 @@ const LogAscent = ({
                       instagram.com/
                     </span>
                     <input
-                      value={formData.beta.instagram}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          beta: { ...formData.beta, instagram: e.target.value },
-                        })
-                      }
+                      value={formData.instagram}
+                      onChange={onChange}
                       type='text'
                       name='instagram'
                       id='instagram'
@@ -325,8 +315,10 @@ const LogAscent = ({
                 >
                   {loading ? (
                     <HashLoader loading={loading} color='white' size={20} />
+                  ) : editMode ? (
+                    'Edit ascent'
                   ) : (
-                    'Log Ascent'
+                    'Log ascent'
                   )}
                 </button>
                 <button
@@ -352,4 +344,6 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, { logAscent, getAreas })(LogAscent);
+export default connect(mapStateToProps, { logAscent, getAreas, updateAscent })(
+  LogAscent
+);

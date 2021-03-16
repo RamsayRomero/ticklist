@@ -33,7 +33,8 @@ router.post(
         date: req.body.date,
         flash: req.body.flash,
         fa: req.body.fa,
-        beta: { youtube: req.body.youtube, instagram: req.body.instagram },
+        youtube: req.body.youtube,
+        instagram: req.body.instagram,
       });
 
       const ascent = await newAscent.save();
@@ -41,6 +42,46 @@ router.post(
       await user.save();
       const ascents = await Ascent.find({ user: req.user.id }).populate('area');
       res.json(ascents);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route    PATCH api/ascents
+// @desc     Update an ascent
+// @access   Private
+router.patch(
+  '/',
+  auth,
+  check('name', 'Name is required').notEmpty(),
+  check('grade', 'Grade is required').notEmpty(),
+  check('date', 'Date is required').notEmpty(),
+  check('rating', 'Rating is required').notEmpty(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const filter = { user: req.user.id, _id: req.body._id };
+    const update = {
+      rating: req.body.rating,
+      area: req.body.area._id,
+      name: req.body.name,
+      grade: req.body.grade,
+      date: req.body.date,
+      flash: req.body.flash,
+      fa: req.body.fa,
+      youtube: req.body.youtube,
+      instagram: req.body.instagram,
+    };
+
+    try {
+      let updatedAscent = await Ascent.findOneAndUpdate(filter, update, {
+        new: true,
+      });
+      res.json(updatedAscent);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -66,13 +107,10 @@ router.get('/:area_id', async (req, res) => {
 // @access   Public
 router.get('/user/:user_id', async (req, res) => {
   try {
-    // const ascents = await Ascent.find({ user: req.params.user_id }).populate(
-    //   'area'
-    // );
-    const user = await User.findById(req.params.user_id)
-      .select('-password')
-      .populate('ascents');
-    res.json(user);
+    const ascents = await Ascent.find({ user: req.params.user_id }).populate(
+      'area'
+    );
+    res.json(ascents);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
+const Ascent = require('../../models/Ascent');
 
 // @route    GET api/auth
 // @desc     Get user by token

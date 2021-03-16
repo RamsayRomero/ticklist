@@ -1,23 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getAscentsByUser } from '../redux/actions/ascents';
+import { logout } from '../redux/actions/auth';
 import Avatar from '../components/Avatar';
 import formatDate from '../utils/formatDate';
 import HashLoader from 'react-spinners/HashLoader';
 import LogAscent from '../components/LogAscent';
 
-export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
+export const Dashboard = ({
+  user,
+  getAscentsByUser,
+  loading,
+  ascents,
+  areas,
+  logout,
+}) => {
   const [logAscentIsOpen, setLogAscentIsOpen] = useState(false);
+  const [editAscentMode, setEditAscentMode] = useState(false);
   const [accountDropdownIsOpen, setAccountDropdownIsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    rating: 0,
+    area: '',
+    grade: 'VB',
+    date: '',
+    flash: false,
+    fa: false,
+    youtube: '',
+    instagram: '',
+  });
 
   useEffect(() => {
     getAscentsByUser(user._id);
+    console.log(ascents);
   }, [getAscentsByUser]);
 
   return (
     <div className='h-screen flex overflow-hidden bg-white'>
       <LogAscent
+        editMode={editAscentMode}
+        setFormData={setFormData}
+        formData={formData}
         isOpen={logAscentIsOpen}
         onClose={() => setLogAscentIsOpen(false)}
       />
@@ -314,13 +338,13 @@ export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
                     </a>
                   </div>
                   <div className='py-1' role='none'>
-                    <a
-                      href='#'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    <button
+                      onClick={logout}
+                      className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                       role='menuitem'
                     >
                       Logout
-                    </a>
+                    </button>
                   </div>
                 </div>
               )}
@@ -614,13 +638,13 @@ export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
                       </a>
                     </div>
                     <div className='py-1' role='none'>
-                      <a
-                        href='#'
-                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      <button
+                        onClick={logout}
+                        className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                         role='menuitem'
                       >
                         Logout
-                      </a>
+                      </button>
                     </div>
                   </div>
                 )}
@@ -641,7 +665,21 @@ export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
             </div>
             <div className='mt-4 flex sm:mt-0 sm:ml-4'>
               <button
-                onClick={() => setLogAscentIsOpen(true)}
+                onClick={() => {
+                  setEditAscentMode(false);
+                  setFormData({
+                    name: '',
+                    rating: 0,
+                    area: '',
+                    grade: 'VB',
+                    date: '',
+                    flash: false,
+                    fa: false,
+                    youtube: '',
+                    instagram: '',
+                  });
+                  setLogAscentIsOpen(true);
+                }}
                 type='button'
                 className='order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3'
               >
@@ -714,7 +752,7 @@ export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
                     </tr>
                   </thead>
                   <tbody className='bg-white divide-y divide-gray-200'>
-                    {user.ascents.map((ascent) => (
+                    {ascents.map((ascent) => (
                       <tr key={ascent._id}>
                         <td className='px-6 py-4 text-sm font-medium text-gray-900'>
                           {ascent.name}
@@ -732,12 +770,17 @@ export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
                           {formatDate(ascent.date)}
                         </td>
                         <td className='px-6 py-4 text-right text-sm font-medium'>
-                          <a
-                            href='#'
+                          <button
+                            onClick={() => {
+                              setEditAscentMode(true);
+                              setFormData(ascent);
+                              setLogAscentIsOpen(true);
+                              console.log(formData);
+                            }}
                             className='text-indigo-600 hover:text-indigo-900'
                           >
                             Edit
-                          </a>
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -754,8 +797,11 @@ export const Dashboard = ({ user, getAscentsByUser, loading, areas }) => {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  loading: state.auth.loading,
+  loading: state.ascents.loading,
   areas: state.areas.areas,
+  ascents: state.ascents.ascents,
 });
 
-export default connect(mapStateToProps, { getAscentsByUser })(Dashboard);
+export default connect(mapStateToProps, { getAscentsByUser, logout })(
+  Dashboard
+);

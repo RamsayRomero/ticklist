@@ -16,3 +16,4 @@ export const GET_AREAS = 'GET_AREAS';
 export const ADD_AREA = 'ADD_AREA';
 export const AREA_ERROR = 'AREA_ERROR';
 export const LOG_ASCENT_START = 'LOG_ASCENT_START';
+export const UPDATE_ASCENT = 'UPDATE_ASCENT';

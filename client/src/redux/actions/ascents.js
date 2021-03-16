@@ -3,10 +3,12 @@ import {
   ASCENTS_ERROR,
   LOG_ASCENT,
   LOG_ASCENT_START,
+  UPDATE_ASCENT,
 } from './types';
 import api from '../../utils/api';
 
 export const getAscentsByUser = (user_id) => async (dispatch) => {
+  dispatch({ type: LOG_ASCENT_START });
   try {
     const { data } = await api.get(`/ascents/user/${user_id}`);
     dispatch({ type: GET_ASCENTS_BY_USER, payload: data });
@@ -24,8 +26,24 @@ export const getAscentsByUser = (user_id) => async (dispatch) => {
 export const logAscent = (ascentData, user_id) => async (dispatch) => {
   try {
     dispatch({ type: LOG_ASCENT_START });
-    const { data } = await api.post('/ascents', ascentData);
+    const { data } = await api.patch('/ascents', ascentData);
     dispatch({ type: LOG_ASCENT, payload: data });
+    dispatch(getAscentsByUser(user_id));
+  } catch (error) {
+    if (error.response) {
+      dispatch({ type: ASCENTS_ERROR, payload: error.response.data.errors });
+    } else if (error.request) {
+      dispatch({ type: ASCENTS_ERROR, payload: error.request });
+    } else {
+      dispatch({ type: ASCENTS_ERROR, payload: error.message });
+    }
+  }
+};
+export const updateAscent = (ascentData, user_id) => async (dispatch) => {
+  try {
+    dispatch({ type: LOG_ASCENT_START });
+    const { data } = await api.patch('/ascents', ascentData);
+    dispatch({ type: UPDATE_ASCENT, payload: data });
     dispatch(getAscentsByUser(user_id));
   } catch (error) {
     if (error.response) {
