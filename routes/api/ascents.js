@@ -6,11 +6,11 @@ const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');
 const Ascent = require('../../models/Ascent');
 
-// @route    POST api/ascents/:area_id
+// @route    POST api/ascents/
 // @desc     Log an ascent
 // @access   Private
 router.post(
-  '/:area_id',
+  '/',
   auth,
   check('name', 'Name is required').notEmpty(),
   check('grade', 'Grade is required').notEmpty(),
@@ -26,7 +26,7 @@ router.post(
 
       const newAscent = await new Ascent({
         user: req.user.id,
-        area: req.params.area_id,
+        area: req.body.area._id,
         rating: req.body.rating,
         name: req.body.name,
         grade: req.body.grade,
@@ -66,11 +66,13 @@ router.get('/:area_id', async (req, res) => {
 // @access   Public
 router.get('/user/:user_id', async (req, res) => {
   try {
-    const ascents = await Ascent.find({ user: req.params.user_id }).populate(
-      'area'
-    );
-    const user = await User.findById(req.params.user_id).select('-password');
-    res.json({ user, ascents });
+    // const ascents = await Ascent.find({ user: req.params.user_id }).populate(
+    //   'area'
+    // );
+    const user = await User.findById(req.params.user_id)
+      .select('-password')
+      .populate('ascents');
+    res.json(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

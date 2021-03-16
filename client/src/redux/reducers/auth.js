@@ -8,6 +8,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   ACCOUNT_DELETED,
+  GET_ASCENTS_BY_USER,
 } from '../actions/types';
 
 const initialState = {
@@ -27,6 +28,8 @@ function authReducer(state = initialState, action) {
         ...state,
         loading: true,
       };
+    case GET_ASCENTS_BY_USER:
+      return { ...state, user: payload };
     case USER_LOADED:
       return {
         ...state,

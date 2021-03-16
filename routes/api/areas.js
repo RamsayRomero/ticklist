@@ -36,6 +36,19 @@ router.post(
   }
 );
 
+// @route    GET api/areas
+// @desc     Get all areas
+// @access   Public
+router.get('/', async (req, res) => {
+  try {
+    let areas = await Area.find();
+    res.json(areas);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 // @route    DELETE api/area/:area_id
 // @desc     Delete area
 // @access   Private
